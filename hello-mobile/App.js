@@ -2,6 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import React, { Component } from 'react';
 
+import Screen1 from './components/Screen1';
+import Screen2 from './components/Screen2';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+// Create the navigator
+const Stack = createStackNavigator();
+
 export default class HelloWorld extends Component {
   constructor(props) {
     super(props);
@@ -14,28 +23,41 @@ export default class HelloWorld extends Component {
 
   render() {
     return (
-    <View style={styles.container}>
-      {/* <Text>Hello, World!</Text> */}
-      <Text>You Wrote: {this.state.text}</Text>
-      <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1}} 
-        // styles={styles.textbox} 
-        onChangeText={(text) => this.setState({ text })}
-        value={this.state.text}
-        placeholder='Type here...'
-        />
-        <Button 
-          onPress={() => {
-            this.alertMyText({text: this.state.text});
-          }}
-          title='Send'
-        />
-      {/* <ScrollView>
-        <Text style={{ fontSize: 150 }}>This text is so big and you have to scroll</Text>
-      </ScrollView> */}
-      <StatusBar style="auto" />
-    </View>
-  );
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Screen1'>
+          <Stack.Screen
+            name='Screen1'
+            component={Screen1}
+          />
+          <Stack.Screen
+            name='Screen2'
+            component={Screen2}
+          />
+        </Stack.Navigator>
+        {/* <View style={styles.container}>
+        <Text>Hello, World!</Text>
+        <Text>You Wrote: {this.state.text}</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1}} 
+          onChangeText={(text) => this.setState({ text })}
+          value={this.state.text}
+          placeholder='Type here...'
+          />
+          <Button 
+            onPress={() => {
+              this.alertMyText({text: this.state.text});
+            }}
+            title='Send'
+          />
+        <ScrollView>
+          <Text style={{ fontSize: 150 }}>This text is so big and you have to scroll</Text>
+        </ScrollView>
+          <StatusBar style="auto" />
+        </View> */}
+      </NavigationContainer>
+      
+
+    );
   }
 }
 
@@ -47,11 +69,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // flexDirection:'column'
   }, 
-  textbox: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1
-  },
+  // textbox: {
+  //   height: 40,
+  //   borderColor: 'gray',
+  //   borderWidth: 1
+  // },
   // box2: {
   //   flex: 80,
   //   width: 190,
