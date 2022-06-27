@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, StyleSheet, View, Text, Button, TextInput } from 'react-native';
+import { ImageBackground, StyleSheet, View, Text, Button, TextInput, Alert } from 'react-native';
 import { color } from 'react-native-reanimated';
 
 export default class Start extends React.Component {
@@ -7,8 +7,23 @@ export default class Start extends React.Component {
     super(props);
     this.state = { 
       name: '',
+      bgColor: '#fff'
     };
   }
+
+  colors = {
+    default: '#fff',
+    black: '#090C08',
+    purple: '#474056',
+    blue: '#8A95A5',
+    green: '#B9C6AE'
+  }
+
+  //Allows the user to change background to presets
+  chooseBackground = (newColor) => {
+    this.setState({ bgColor: newColor });
+    Alert.alert('Background Changed!');
+  };
 
   render() {
     return (
@@ -24,15 +39,28 @@ export default class Start extends React.Component {
             />
             <Text style={styles.ChooseBackground}>Choose Background Color:</Text>
             <View style={styles.colorBlock}>
-              <View style={styles.bg1}></View>
-              <View style={[styles.bg1, styles.variant]}></View>
-              <View style={[styles.bg1, styles.variant2]}></View>
-              <View style={[styles.bg1, styles.variant3]}></View>
+              <View style={styles.bg1}>
+                <Button title=''
+                  onPress={() => this.chooseBackground(this.colors.black)}/>
+              </View>
+              <View style={[styles.bg1, styles.variant]}>
+                <Button title=''
+                  onPress={() => this.chooseBackground(this.colors.purple)}/>
+              </View>
+              <View style={[styles.bg1, styles.variant2]}>
+                <Button title=''
+                  onPress={() => this.chooseBackground(this.colors.blue)}/>
+              </View>
+              <View style={[styles.bg1, styles.variant3]}>
+                <Button title=''
+                  onPress={() => this.chooseBackground(this.colors.green)}/>
+              </View>
             </View>
             <View style={styles.button}>
+              <Text style={styles.buttonText}>Start Chatting</Text>
               <Button
-              title="Start Chatting"
-              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name })}
+              title=""
+              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}
             />
             </View>
           </View>
@@ -84,24 +112,31 @@ const styles = StyleSheet.create({
   },
   button: {
     // marginLeft: 60,
+    paddingTop: 20,
+    borderRadius: 4,
     alignSelf: 'center',
     backgroundColor: '#757083',
+    width: '80%'
+  },
+  buttonText: {
     color: '#FFFFFF',
-    width: '60%'
+    alignSelf: 'center',
+    fontSize: 18,
+    fontWeight: '600'
   },
   colorBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
     marginLeft: 20,
-    marginBottom: 30
+    marginBottom: 30,
   },
   bg1: {
     backgroundColor: '#090C08',
     width: 50,
     borderRadius: 25,
     height: 50,
-    marginTop: 20
+    marginTop: 20,
   },
   variant: {
     backgroundColor: '#474056'
