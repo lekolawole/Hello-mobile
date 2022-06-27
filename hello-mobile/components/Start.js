@@ -22,7 +22,13 @@ export default class Start extends React.Component {
             value={this.state.name}
             placeholder='Enter your name'
             />
-            <Text style={styles.TextSettings}>Choose Background Color:</Text>
+            <Text style={styles.ChooseBackground}>Choose Background Color:</Text>
+            <View style={styles.colorBlock}>
+              <View style={styles.bg1}></View>
+              <View style={[styles.bg1, styles.variant]}></View>
+              <View style={[styles.bg1, styles.variant2]}></View>
+              <View style={[styles.bg1, styles.variant3]}></View>
+            </View>
             <View style={styles.button}>
               <Button
               title="Start Chatting"
@@ -51,12 +57,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 3,
   },
-  TextSettings: {
+  ChooseBackground: {
     fontWeight: '300',
     color: '#757083',
     opacity: '100%',
     fontSize: 16,
-    marginBottom: 100
   },
   textInput: {
     marginBottom: 40,
@@ -67,7 +72,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    borderRadius: 3,
+    borderRadius: 4,
     opacity: '50%',
     fontWeight: '300',
     color: '#757083'
@@ -78,8 +83,33 @@ const styles = StyleSheet.create({
     height: 275
   },
   button: {
-    marginLeft: 100,
+    // marginLeft: 60,
+    alignSelf: 'center',
     backgroundColor: '#757083',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    width: '60%'
+  },
+  colorBlock: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginLeft: 20,
+    marginBottom: 30
+  },
+  bg1: {
+    backgroundColor: '#090C08',
+    width: 50,
+    borderRadius: 25,
+    height: 50,
+    marginTop: 20
+  },
+  variant: {
+    backgroundColor: '#474056'
+  },
+  variant2: {
+    backgroundColor: '#8A95A5'
+  },
+  variant3: {
+    backgroundColor: '#B9C6AE'
   }
 });
