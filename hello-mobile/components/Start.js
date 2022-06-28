@@ -1,18 +1,20 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, View, Text, Button, TextInput, Alert } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { color } from 'react-native-reanimated';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 export default class Start extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
       name: '',
-      bgColor: '#fff'
+      bgColor: this.colors.default
     };
   }
 
   colors = {
-    default: '#fff',
+    default: '#ffffff',
     black: '#090C08',
     purple: '#474056',
     blue: '#8A95A5',
@@ -31,7 +33,7 @@ export default class Start extends React.Component {
         <View style={styles.container}>
           <Text style={styles.title}>Hello Chat!</Text>
           <View style={styles.TextWrapper}>
-            <TextInput 
+            <TextInput
             style={styles.textInput}
             onChangeText={(text) => this.setState({ name: text })}
             value={this.state.name}
@@ -39,29 +41,31 @@ export default class Start extends React.Component {
             />
             <Text style={styles.ChooseBackground}>Choose Background Color:</Text>
             <View style={styles.colorBlock}>
-              <View style={styles.bg1}>
-                <Button title=''
+                <TouchableOpacity style={styles.bg1} title=''
+                  accessible={true}
+                  accessibilityRole="button"
                   onPress={() => this.chooseBackground(this.colors.black)}/>
-              </View>
-              <View style={[styles.bg1, styles.variant]}>
-                <Button title=''
+                <TouchableOpacity style={[styles.bg1, styles.variant]} title=''
+                  accessible={true}
+                  accessibilityRole="button"
                   onPress={() => this.chooseBackground(this.colors.purple)}/>
-              </View>
-              <View style={[styles.bg1, styles.variant2]}>
-                <Button title=''
+                <TouchableOpacity style={[styles.bg1, styles.variant2]} title=''
+                  accessible={true}
+                  accessibilityRole="button"
                   onPress={() => this.chooseBackground(this.colors.blue)}/>
-              </View>
-              <View style={[styles.bg1, styles.variant3]}>
-                <Button title=''
+                <TouchableOpacity style={[styles.bg1, styles.variant3]} title=''
+                  accessible={true}
+                  accessibilityRole="button"
                   onPress={() => this.chooseBackground(this.colors.green)}/>
-              </View>
             </View>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Start Chatting</Text>
-              <Button
+              <Pressable
+              accessible={true}
+              accessibilityRole="button"
               title=""
-              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}
-            />
+              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}>
+                <Text style={styles.buttonText}>Start Chatting</Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -78,9 +82,9 @@ const styles = StyleSheet.create({
   }, 
   TextWrapper: {
     width: '88%',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     height: '44%',
-    alignItems: 'left',
+    // alignItems: 'left',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 3,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   ChooseBackground: {
     fontWeight: '300',
     color: '#757083',
-    opacity: '100%',
+    // opacity: '100%',
     fontSize: 16,
   },
   textInput: {
@@ -101,19 +105,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 4,
-    opacity: '50%',
+    // opacity: '50%',
     fontWeight: '300',
-    color: '#757083'
+    color: '#757083',
+    backgroundColor: 'white'
   },
   title: {
     fontSize: 45,
-    color: '#fff',
+    color: '#ffffff',
     height: 275
   },
   button: {
-    // marginLeft: 60,
-    paddingTop: 20,
     borderRadius: 4,
+    padding: 6,
     alignSelf: 'center',
     backgroundColor: '#757083',
     width: '80%'

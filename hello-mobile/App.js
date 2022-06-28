@@ -20,7 +20,7 @@ export default class HelloWorld extends Component {
   render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Screen1'>
+        <Stack.Navigator initialRouteName='Start'>
           <Stack.Screen
             name='Start'
             component={Start}
@@ -40,7 +40,7 @@ export default class HelloWorld extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center'
   }, 
