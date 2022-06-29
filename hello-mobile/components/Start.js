@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     width: '88%',
     backgroundColor: '#ffffff',
     height: '44%',
-    // alignItems: 'left',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 3,
@@ -92,7 +91,6 @@ const styles = StyleSheet.create({
   ChooseBackground: {
     fontWeight: '300',
     color: '#757083',
-    // opacity: '100%',
     fontSize: 16,
   },
   textInput: {
@@ -105,7 +103,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 4,
-    // opacity: '50%',
     fontWeight: '300',
     color: '#757083',
     backgroundColor: 'white'

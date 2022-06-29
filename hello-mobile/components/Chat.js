@@ -4,19 +4,21 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
 
 export default class Chat extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       messages: []
     }
   }
 
   componentDidMount() {
+    //Sets state for messages as user enters Chat
+    let { name } = this.props.route.params;
     this.setState({
       messages: [
         {
           _id: 1,
-          text: 'Hello developer',
+          text: `Hello ${name}`,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -41,32 +43,14 @@ export default class Chat extends React.Component {
   }
 
   renderBubble = (props) => (
+    // Update colors - may use later
     <Bubble
       {...props}
-      // renderTime={() => <Text>Time</Text>}
-      // renderTicks={() => <Text>Ticks</Text>}
-      // containerStyle={{
-      //   left: { borderColor: 'teal', borderWidth: 8 },
-      //   right: {},
-      // }}
       // wrapperStyle={{
-      //   left: { borderColor: 'tomato', borderWidth: 4 },
-      //   right: {},
+      //   left: {
+      //     backgroundColor: 'yellow'
+      //   }
       // }}
-      // bottomContainerStyle={{
-      //   left: { borderColor: 'purple', borderWidth: 4 },
-      //   right: {},
-      // }}
-      // tickStyle={{}}
-      // usernameStyle={{ color: 'tomato', fontWeight: '100' }}
-      // containerToNextStyle={{
-      //   left: { borderColor: 'navy', borderWidth: 4 },
-      //   right: {},
-      // }}
-      containerToPreviousStyle={{
-        left: { borderColor: 'mediumorchid', borderWidth: 4 },
-        right: {},
-      }}
     />
   );
   render() {
@@ -77,7 +61,6 @@ export default class Chat extends React.Component {
 
     return (
       <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: bgColor, flexDirection: 'row' }}>
-        {/* <Text style={styles.welcomeMessage}>Hello, {name}</Text> */}
         <View style={styles.chatWrapper}>
           <GiftedChat
             renderBubble={this.renderBubble.bind(this)}
@@ -96,13 +79,8 @@ export default class Chat extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  welcomeMessage: {
-    fontSize: 24,
-    color: '#fff'
-  },
   chatWrapper: {
     flex: 1,
-    // flexDirection: 'row'
   }
 });
 
