@@ -39,17 +39,22 @@ export default class Chat extends React.Component {
   componentDidMount() {
     let { name } = this.props.route.params;
     // create a reference to the active user's documents (shopping lists)
-    this.referenceMessages = firebase.firestore().collection('messages')
-    // .where("uid", "==", this.state.uid); - used for private chats
+    this.referenceMessages = firebase.firestore().collection('messages');
+    // .where("uid", "==", this.state.uid);
 
-    //Creates a new user for an Anonymous account using Firebase
+    //Creates a new user for an Anonymouns account using Firebase
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
       }
+      // Adds correct data for fields in Firestore { uid, text, user.name, user.id, createdAt } for future interaction (sending messages)
       this.setState({
         uid: user.uid,
         messages: [],
+        user: {
+          _id: user.uid,
+          name: name
+        }
       });
       this.unsubscribe = this.referenceMessages
         .orderBy("createdAt", "desc")
@@ -82,7 +87,7 @@ export default class Chat extends React.Component {
     });
   }
 
-  // Handles adding a message to Firestore
+  // Handles adding a message to Firestore db
   addMessage = (message) => {
     this.referenceMessages.add({
           uid: this.state.uid,
