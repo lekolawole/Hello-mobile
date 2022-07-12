@@ -3,6 +3,9 @@ import { StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+// import MapView from "react-native-maps";
+import CustomActions from '../CustomActions';
+
 
 // Installing Firebase /////
 const firebase = require('firebase');
@@ -13,12 +16,26 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [], 
+      messages: [
+        {
+  _id: 1,
+  createdAt: new Date(),
+  user: {
+    _id: 2,
+    name: 'React Native',
+    avatar: 'https://placeimg.com/140/140/any',
+  },
+  location: {
+    latitude: 48.864601,
+    longitude: 2.398704,
+  },
+}
+      ], 
       uid: '', 
       user: {
         _id: '',
         name: '',
-        avatar: '',
+        avatar: 'https://placeimg.com/140/140/any',
       }, 
       // isConnected: false
     };
@@ -64,11 +81,12 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         messages: [],
-        user: {
-          _id: user.uid,
-          name: name,
-          avatar: "https://placeimg.com/140/140/any",
-        }
+        user
+        // user: {
+        //   _id: user.uid,
+        //   name: name,
+        //   avatar: "https://placeimg.com/140/140/any",
+        // }
       });
       this.referenceChatUser = firebase.firestore().collection('messages').where("uid", "==", this.state.uid);
       this.saveMessages();
@@ -186,6 +204,32 @@ export default class Chat extends React.Component {
     />
   );
 
+    // Creates the action (+) button
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
+  // This function checks whether the currentMessage has location data || if yes, a MapView is returned 
+  renderCustomView (props) {
+    const { currentMessage} = props;
+    if (currentMessage.location) {
+      return (
+          <MapView
+            style={{width: 150,
+              height: 100,
+              borderRadius: 13,
+              margin: 3}}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+      );
+    }
+    return null;
+  }
 
   render() {
     let { name } = this.props.route.params;
@@ -198,6 +242,7 @@ export default class Chat extends React.Component {
         <View style={styles.chatWrapper}>
           <GiftedChat
             renderBubble={this.renderBubble.bind(this)}
+            renderActions={this.renderCustomActions}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}

@@ -31,8 +31,6 @@ export default class HelloWorld extends Component {
           />
         </Stack.Navigator>
       </NavigationContainer>
-      
-
     );
   }
 }
