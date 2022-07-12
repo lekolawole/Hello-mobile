@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-// import MapView from "react-native-maps";
-import CustomActions from '../CustomActions';
+import MapView from "react-native-maps";
+import CustomActions from './CustomActions';
 
 
 // Installing Firebase /////
@@ -16,22 +16,8 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [
-        {
-  _id: 1,
-  createdAt: new Date(),
-  user: {
-    _id: 2,
-    name: 'React Native',
-    avatar: 'https://placeimg.com/140/140/any',
-  },
-  location: {
-    latitude: 48.864601,
-    longitude: 2.398704,
-  },
-}
-      ], 
-      uid: '', 
+      messages: [], 
+      uid: 0, 
       user: {
         _id: '',
         name: '',
@@ -59,6 +45,8 @@ export default class Chat extends React.Component {
 
   componentDidMount() {
     let { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: name }); 
+
     // create a reference to the active user's documents (shopping lists)
     this.referenceMessages = firebase.firestore().collection('messages');
     // .where("uid", "==", this.state.uid);
@@ -81,12 +69,12 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         messages: [],
-        user
-        // user: {
-        //   _id: user.uid,
-        //   name: name,
-        //   avatar: "https://placeimg.com/140/140/any",
-        // }
+        //user
+        user: {
+          _id: user.uid,
+          name: name,
+          avatar: "https://placeimg.com/140/140/any",
+        }
       });
       this.referenceChatUser = firebase.firestore().collection('messages').where("uid", "==", this.state.uid);
       this.saveMessages();
@@ -179,6 +167,17 @@ export default class Chat extends React.Component {
     )
   }
 
+  renderBubble = (props) => (
+    // Update colors - may use later
+    <Bubble
+      {...props}
+      // wrapperStyle={{
+      //   left: {
+      //     backgroundColor: 'yellow'
+      //   }
+      // }}
+    />
+  );
 
   //Disables InputToolbar when user is offline 
   renderInputToolbar(props) {
@@ -191,18 +190,6 @@ export default class Chat extends React.Component {
       );
     }
   }
-
-  renderBubble = (props) => (
-    // Update colors - may use later
-    <Bubble
-      {...props}
-      // wrapperStyle={{
-      //   left: {
-      //     backgroundColor: 'yellow'
-      //   }
-      // }}
-    />
-  );
 
     // Creates the action (+) button
   renderCustomActions = (props) => {
@@ -235,17 +222,17 @@ export default class Chat extends React.Component {
     let { name } = this.props.route.params;
     const { messages } = this.state;
     let { bgColor } = this.props.route.params;
-    this.props.navigation.setOptions({ title: name }); 
-
+   
     return (
       <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: bgColor, flexDirection: 'row' }}>
         <View style={styles.chatWrapper}>
           <GiftedChat
             renderBubble={this.renderBubble.bind(this)}
-            renderActions={this.renderCustomActions}
+            renderActions={this.renderCustomActions.bind(this)}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
+            renderCustomView={this.renderCustomView}
             user={{
               _id: this.state.user._id, 
               name: name,
