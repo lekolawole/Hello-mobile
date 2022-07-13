@@ -22,6 +22,13 @@ To build a chat app for mobile devices using React Native. The app will provide 
  <li>Data gets stored online and offline</li>
 </ul>
 
+### Home Screen 
+<div>
+<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/home.PNG?raw=true' width='300' alt='home' />
+<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/chat-screen.PNG?raw=true' width='300' alt='chat screen' />
+<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/action-sheet.PNG?raw=true' width='300' alt='action sheet' />
+</div>
+
 ### My Developer Take-aways
 This development project was tricky because I was transferring web development skills to mobile. As a cross-platform technology, React Native was perfect to handle these challenges. 
 <br /> 
@@ -37,3 +44,16 @@ Research into the typical features of mobile apps (accessibilty, chat UI design,
 <li>As a user, I want to be able to read my messages offline so I can reread conversations at any time.</li>
 <li>As a user with a visual impairment, I want to use a chat app that is compatible with a screen reader so that I can engage with a chat interface.</li>
 </ol>
+
+### Environement Setup & Installation
+#### To Test on your Computer: Fork this repo and download 
+Make sure expo is installed globally, then to initialize the project in XCode, Andriod Studio, or another code editor run:
+<br />
+```npm install expo-cli --global```
+<br />
+
+```npm install``` for all other devDependencies
+
+#### Enter the command: ```npm expo start```
+#### Scan the QR code that appears to launch the app with Expo.
+#### OR, run on emulator through Andriod Studio.
