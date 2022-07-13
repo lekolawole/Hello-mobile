@@ -23,7 +23,9 @@ export default class Chat extends React.Component {
         name: '',
         avatar: 'https://placeimg.com/140/140/any',
       }, 
-      // isConnected: false
+      // isConnected: false, 
+      image: null,
+      location: null
     };
 
     const firebaseConfig = {
@@ -100,7 +102,7 @@ export default class Chat extends React.Component {
     }
   }
 
-   async saveMessages() {
+  async saveMessages() {
     try {
       await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     } catch (error) {
@@ -131,8 +133,11 @@ export default class Chat extends React.Component {
         createdAt: data.createdAt.toDate(),
         user: {
           _id: data.user._id,
-          name: data.user.name
-        }
+          name: data.user.name,
+           avatar: data.user.avatar
+        },
+        image: data.image || null,
+        location: data.location || null,
       });
     });
      this.setState({
@@ -141,26 +146,28 @@ export default class Chat extends React.Component {
   }
 
   // Handles adding a message to Firestore db
-  addMessage = () => {
+  addMessage() {
     const message = this.state.messages[0];
     this.referenceMessages.add({
           uid: this.state.uid,
           _id: message._id,
-          text: message.text,
+          text: message.text || '',
           createdAt: message.createdAt,
-          user: message.user
+          user: message.user,
+          image: message.image || null,
+          location: message.location || null,
     });
   }
   
    componentWillUnmount() {
+    this.authUnsubscribe();
     this.unsubscribe();
   }
   
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
-    }),
-      () => { //Adds message to state, calling addMessage()
+    }), () => { //Adds message to state, calling addMessage()
         this.addMessage();
         this.saveMessages();
       }
@@ -168,14 +175,8 @@ export default class Chat extends React.Component {
   }
 
   renderBubble = (props) => (
-    // Update colors - may use later
     <Bubble
       {...props}
-      // wrapperStyle={{
-      //   left: {
-      //     backgroundColor: 'yellow'
-      //   }
-      // }}
     />
   );
 
@@ -197,15 +198,12 @@ export default class Chat extends React.Component {
   };
 
   // This function checks whether the currentMessage has location data || if yes, a MapView is returned 
-  renderCustomView (props) {
-    const { currentMessage} = props;
+  renderCustomView(props) {
+    const { currentMessage } = props;
     if (currentMessage.location) {
       return (
           <MapView
-            style={{width: 150,
-              height: 100,
-              borderRadius: 13,
-              margin: 3}}
+            style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
             region={{
               latitude: currentMessage.location.latitude,
               longitude: currentMessage.location.longitude,
@@ -220,7 +218,6 @@ export default class Chat extends React.Component {
 
   render() {
     let { name } = this.props.route.params;
-    const { messages } = this.state;
     let { bgColor } = this.props.route.params;
    
     return (
@@ -233,6 +230,7 @@ export default class Chat extends React.Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             renderCustomView={this.renderCustomView}
+            // renderUsernameOnMessage={true}
             user={{
               _id: this.state.user._id, 
               name: name,

@@ -12,7 +12,6 @@ import "firebase/firestore";
 export default function CustomActions(props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const [image, setImage] = useState(null);
-  const [text, setText] = useState('');
   const [location, setLocation] = useState(null);
 
   const pickImage = async () => {
@@ -21,7 +20,7 @@ export default function CustomActions(props) {
     // If permission is granted, open user photo library
     if(status === 'granted') {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'Images',
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
       }).catch(error => console.log(error));
 
       if (!result.cancelled) {
@@ -44,6 +43,8 @@ export default function CustomActions(props) {
       if (!result.cancelled) {
         const newImage = result;
         setImage(newImage);
+        const imageUrl = await uploadImageFetch(result.uri);
+        props.onSend({ image: imageUrl });
       }
     }
   }
@@ -51,13 +52,22 @@ export default function CustomActions(props) {
   const getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if(status === 'granted') {
-      let result = await Location.getCurrentPositionAsync({});
+      let result = await Location.getCurrentPositionAsync({})
+       .catch((error) => {
+          console.error(error);
+        });
 
       if (result) {
         const myLocation = result;
         setLocation(myLocation);
-      }
-    }
+        props.onSend({
+          location: {
+            latitude: result.coords.latitude,
+            longitude: result.coords.longitude,
+          }
+        });
+      } 
+    } 
   }
 
   // Convert Image to blob 
@@ -80,9 +90,8 @@ export default function CustomActions(props) {
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
 
-    // Creates reference to new blob in storage 
+    // Creates new blob in storage 
     const ref = firebase.storage().ref().child(`images/${imageName}`);
-
     const snapshot = await ref.put(blob);
 
     blob.close();
@@ -115,8 +124,31 @@ export default function CustomActions(props) {
     );
   };
 
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+        return (
+            <MapView
+                style={{
+                    width: 150,
+                    height: 100,
+                    borderRadius: 13,
+                    margin: 3
+                }}
+                region={{
+                    latitude: currentMessage.location.latitude,
+                    longitude: currentMessage.location.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+            />
+        );
+    }
+    return null;
+  }
+
   return (
-     <TouchableOpacity style={[styles.container]} onPress={onActionPress}>
+     <TouchableOpacity style={[styles.container]} onPress={onActionPress} renderCustomView={renderCustomView}>
        <View style={[styles.wrapper, props.wrapperStyle]}>
          <Text style={[styles.iconText, props.iconTextStyle]}>+</Text>
        </View>
