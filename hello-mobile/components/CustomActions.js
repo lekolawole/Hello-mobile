@@ -1,93 +1,67 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+import MapView from 'react-native-maps';
+import * as firebase from "firebase";
+import "firebase/firestore";
 
-export default class CustomActions extends React.Component {
-  state = {
-    image: null,
-    location: null
-  }
+export default function CustomActions(props) {
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [image, setImage] = useState(null);
+  const [text, setText] = useState('');
+  const [location, setLocation] = useState(null);
 
-  
-  onActionPress = () => {
-    const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
-    const cancelButtonIndex = options.length - 1;
-    console.log(this.context);
-    this.context.actionSheet().showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      async (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            console.log('user wants to pick an image');
-            return this.pickImage();;
-          case 1:
-            console.log('user wants to take a photo');
-            return;
-          case 2:
-            console.log('user wants to get their location');
-          default:
-        }
-      },
-    );
-  };
+  const pickImage = async () => {
+   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-  pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
+    // If permission is granted, open user photo library
     if(status === 'granted') {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: 'Images',
       }).catch(error => console.log(error));
 
       if (!result.cancelled) {
-        this.setState({
-          image: result
-        });  
+        const newImage = result;
+        setImage(newImage);
+        const imageUrl = await uploadImageFetch(result.uri);
+        props.onSend({ image: imageUrl });
       }
-
     }
   }
 
-  captureImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+  const captureImage = async () => {
+   const { status } = await Permissions.askAsync(Permissions.CAMERA);
 
     if(status === 'granted') {
-      let result = await ImagePicker.launchImageLibraryAsync({
+      let result = await ImagePicker.launchCameraAsync({
         mediaTypes: 'Images',
       }).catch(error => console.log(error));
 
       if (!result.cancelled) {
-        this.setState({
-          image: result
-        });  
+        const newImage = result;
+        setImage(newImage);
       }
-
     }
   }
 
-  getLocation = async () => {
+  const getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if(status === 'granted') {
       let result = await Location.getCurrentPositionAsync({});
 
       if (result) {
-        this.setState({
-          location: result
-        });
+        const myLocation = result;
+        setLocation(myLocation);
       }
     }
   }
 
   // Convert Image to blob 
-  uploadImageFetch = async (uri) => {
+  const uploadImageFetch = async (uri) => {
     // Creates new XHTML Request
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -112,20 +86,44 @@ export default class CustomActions extends React.Component {
     const snapshot = await ref.put(blob);
 
     blob.close();
-
+    // Creates reference to storage 
     return await snapshot.ref.getDownloadURL();
+  }
+
+  const onActionPress = () => {
+    const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
+    const cancelButtonIndex = options.length - 1;
+    // console.log(this.context);
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      async (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            console.log('user wants to pick an image');
+            return pickImage();;
+          case 1:
+            console.log('user wants to take a photo');
+            return captureImage();
+          case 2:
+            console.log('user wants to get their location');
+          return getLocation();
+        }
+      },
+    );
   };
 
- render() {
-   return (
-     <TouchableOpacity style={[styles.container]} onPress={this.onActionPress}>
-       <View style={[styles.wrapper, this.props.wrapperStyle]}>
-         <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
+  return (
+     <TouchableOpacity style={[styles.container]} onPress={onActionPress}>
+       <View style={[styles.wrapper, props.wrapperStyle]}>
+         <Text style={[styles.iconText, props.iconTextStyle]}>+</Text>
        </View>
      </TouchableOpacity>
-   );
- }
+  )
 }
+
 
 const styles = StyleSheet.create({
  container: {
