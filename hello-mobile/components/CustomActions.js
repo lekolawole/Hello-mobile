@@ -27,7 +27,7 @@ export default function CustomActions(props) {
         const newImage = result;
         setImage(newImage);
         const imageUrl = await uploadImageFetch(result.uri);
-        props.onSend({ image: imageUrl });
+        props.onSend({ image: imageUrl }); // Sends GiftedChat message
       }
     }
   }
@@ -44,7 +44,7 @@ export default function CustomActions(props) {
         const newImage = result;
         setImage(newImage);
         const imageUrl = await uploadImageFetch(result.uri);
-        props.onSend({ image: imageUrl });
+        props.onSend({ image: imageUrl }); // Sends GiftedChat message
       }
     }
   }
@@ -60,7 +60,7 @@ export default function CustomActions(props) {
       if (result) {
         const myLocation = result;
         setLocation(myLocation);
-        props.onSend({
+        props.onSend({ // Sends GiftedChat message
           location: {
             latitude: result.coords.latitude,
             longitude: result.coords.longitude,
@@ -70,7 +70,7 @@ export default function CustomActions(props) {
     } 
   }
 
-  // Convert Image to blob 
+  // Convert Image to blob to store in Firestore
   const uploadImageFetch = async (uri) => {
     // Creates new XHTML Request
     const blob = await new Promise((resolve, reject) => {
@@ -99,10 +99,10 @@ export default function CustomActions(props) {
     return await snapshot.ref.getDownloadURL();
   }
 
+  // Expo ActionSheet
   const onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
-    // console.log(this.context);
     showActionSheetWithOptions(
       {
         options,
@@ -124,6 +124,7 @@ export default function CustomActions(props) {
     );
   };
 
+  // Handles sharing location by sending a MapView
   const renderCustomView = (props) => {
     const { currentMessage } = props;
     if (currentMessage.location) {

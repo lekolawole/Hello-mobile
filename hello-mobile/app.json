@@ -4,12 +4,12 @@
     "slug": "hello-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "https://www.pngmart.com/files/16/Speech-Chat-Icon-PNG-Photos.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "https://www.pngmart.com/files/16/Speech-Chat-Icon-PNG-Photos.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#474056"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

@@ -1,3 +1,9 @@
+// Creating state for user info and Firebase Config
+// When component mounts, internet connection is verified (or not) and displays a user message --- isConnected: False (by default)
+// As component mounts, messages are retrieved from Firebase Cloud Storage, and an anonymous user is logged into the Chat
+
+// Rest of the code retrieves, deletes, and sends messages from users to Firestore
+// OnCollectionUpdate retrieves updates of new data sent to Firestore
 import React from 'react';
 import { StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
@@ -5,7 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import MapView from "react-native-maps";
 import CustomActions from './CustomActions';
-
 
 // Installing Firebase /////
 const firebase = require('firebase');
@@ -23,7 +28,7 @@ export default class Chat extends React.Component {
         name: '',
         avatar: 'https://placeimg.com/140/140/any',
       }, 
-      // isConnected: false, 
+      isConnected: false, 
       image: null,
       location: null
     };
@@ -41,7 +46,6 @@ export default class Chat extends React.Component {
     if (!firebase.apps.length){
     firebase.initializeApp(firebaseConfig);
   }
-
     //this.referenceMessages = firebase.firestore().collection('messages');
   }
 
@@ -49,20 +53,21 @@ export default class Chat extends React.Component {
     let { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name }); 
 
-    // create a reference to the active user's documents (shopping lists)
+    // Create a reference to the active user's documents (messages)
     this.referenceMessages = firebase.firestore().collection('messages');
-    // .where("uid", "==", this.state.uid);
 
-    //Determines user's internet connection status 
+    // Determines user's internet connection status 
     NetInfo.fetch().then(connection => {
       if (connection.isConnected) {
-        console.log('online');
+        this.setState({ isConnected: true })
       } else {
-        console.log('offline');
+        this.setState({
+          isConnected: false
+        })
       }
     });
 
-    //Creates a new user for an Anonymouns account using Firebase
+    // Creates a new user for an Anonymouns account using Firebase
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
@@ -71,7 +76,6 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         messages: [],
-        //user
         user: {
           _id: user.uid,
           name: name,
@@ -85,7 +89,7 @@ export default class Chat extends React.Component {
         .onSnapshot(this.onCollectionUpdate);
     });
 
-    //Retrieves messages from asyncStorage 
+    // Retrieves messages from asyncStorage 
     this.getMessages();
   }
 
@@ -180,9 +184,13 @@ export default class Chat extends React.Component {
     />
   );
 
-  //Disables InputToolbar when user is offline 
+  // UI Feature - Disables InputToolbar when user is offline 
   renderInputToolbar(props) {
+    let { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: name }); 
+
     if (this.state.isConnected == false) {
+      this.props.navigation.setOptions({ title: `${name} is Offline` });
     } else {
       return(
         <InputToolbar
@@ -192,7 +200,7 @@ export default class Chat extends React.Component {
     }
   }
 
-    // Creates the action (+) button
+  // UI Feature - Creates the action (+) button
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
   };
@@ -230,7 +238,6 @@ export default class Chat extends React.Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             renderCustomView={this.renderCustomView}
-            // renderUsernameOnMessage={true}
             user={{
               _id: this.state.user._id, 
               name: name,
