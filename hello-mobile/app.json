@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "https://www.pngmart.com/files/16/Speech-Chat-Icon-PNG-Photos.png",
         "backgroundColor": "#FFFFFF"
       }
     },
