@@ -238,6 +238,7 @@ export default class Chat extends React.Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             renderCustomView={this.renderCustomView}
+            showUserAvatar= {true}
             user={{
               _id: this.state.user._id, 
               name: name,

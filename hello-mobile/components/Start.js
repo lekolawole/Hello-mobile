@@ -44,24 +44,34 @@ export default class Start extends React.Component {
                 <TouchableOpacity style={styles.bg1} title=''
                   accessible={true}
                   accessibilityRole="button"
+                  accessibilityLabel='Choose background'
+                  accessibilityHint='Lets you set the chat background to black.'
                   onPress={() => this.chooseBackground(this.colors.black)}/>
                 <TouchableOpacity style={[styles.bg1, styles.variant]} title=''
                   accessible={true}
                   accessibilityRole="button"
+                  accessibilityLabel='Choose background'
+                  accessibilityHint='Lets you set the chat background to purple.'
                   onPress={() => this.chooseBackground(this.colors.purple)}/>
                 <TouchableOpacity style={[styles.bg1, styles.variant2]} title=''
                   accessible={true}
                   accessibilityRole="button"
+                  accessibilityLabel='Choose background'
+                  accessibilityHint='Lets you set the chat background to blue.'
                   onPress={() => this.chooseBackground(this.colors.blue)}/>
                 <TouchableOpacity style={[styles.bg1, styles.variant3]} title=''
                   accessible={true}
                   accessibilityRole="button"
+                  accessibilityLabel='Choose background'
+                  accessibilityHint='Lets you set the chat background to green.'
                   onPress={() => this.chooseBackground(this.colors.green)}/>
             </View>
             <View style={styles.button}>
               <Pressable
               accessible={true}
               accessibilityRole="button"
+              accessibilityLabel='Start chatting'
+              accessibilityHint='Lets you enter the chat.'
               title=""
               onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}>
                 <Text style={styles.buttonText}>Start Chatting</Text>
