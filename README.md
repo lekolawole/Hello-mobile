@@ -24,9 +24,10 @@ To build a chat app for mobile devices using React Native. The app will provide 
 
 ### Home Screen 
 <div>
-<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/home.PNG?raw=true' width='200' alt='home' />
-<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/chat-screen.PNG?raw=true' width='200' alt='chat screen' />
-<img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/action-sheet.PNG?raw=true' width='200' alt='action sheet' />
+ <img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/home.PNG?raw=true' width='200' alt='home' />
+ <img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/chat-screen.PNG?raw=true' width='200' alt='chat screen' />
+ <img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/action-sheet.PNG?raw=true' width='200' alt='action sheet' />
+ <img src='https://github.com/lekolawole/Hello-mobile/blob/main/hello-mobile/assets/capture.gif?raw=true' width='200' alt='capture screen' />
 </div>
 
 ### My Developer Take-aways
